@@ -1,0 +1,69 @@
+---
+title: "Show B0 and B1 are unbiased"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+
+
+### Perform some simulations to empirically show that beta0 and beta1 are unbiased. In particular, do the following:
+#### (i) Randomly sample 75 values of X from N(10, 12).
+#### (ii) Randomly sample 75 values of Y from N(15 + 2X, 42). (Note: If you plug in your vector X of 75 values into rnorm with n=75, that will sample a corresponding Y to go with each of the X values).
+#### (iii) Run a regression of Y over X and save the values of beta0 and beta1.
+#### (iv) Repeat this 10000 times.
+
+```{r, message=FALSE, warning=FALSE}
+beta0 <- NULL
+beta1 <- NULL
+
+for(i in 1:10000){
+  x_vals <- rnorm(75, mean=10, sd=1)
+  y_vals <- rnorm(75, mean=(15+2*x_vals), 4)
+  
+  data_frame <- data.frame(x_vals, y_vals)
+  
+  model <- lm(y_vals ~ x_vals, data = data_frame)
+  bt0 <- model[["coefficients"]][["(Intercept)"]]
+  bt1 <- model[["coefficients"]][["x_vals"]]
+  
+  beta0 <- c(beta0, bt0)
+  beta1 <- c(beta1, bt1)
+}
+
+
+```
+
+#### (v) Calculate the mean of all the beta0 and beta1 values.
+```{r ,message=FALSE, warning=FALSE}
+  beta0_mean <- mean(beta0)
+  beta1_mean <- mean(beta1)
+```
+```{r, message=FALSE, warning=FALSE}
+  beta0_mean
+```
+```{r, message=FALSE, warning=FALSE}
+  beta1_mean
+```
+#### (vi) Compare the empirical means from part v to the true values of beta0 and beta1.
+They are relatively the same. We obtained Y randomly from a distribution N(15 + 2X, 42). As such, we expected the y-intercept to be 15 on average and beta1 to be 2 on average. Here, we got that are almost exactly similar to what we expected as is evident above.With a larger sample, these values are expected to be closer to 15 and 2, respectively
+
+#### (v) Make histograms of the 10000 values of ˆ 0 and ˆ 1, and overlay a red vertical line on each at the true parameter value.
+
+##### Beta0
+```{r}
+ hist(beta0)
+abline(v=15, col='red', lwd=3,)
+```
+
+##### Beta1
+```{r}
+hist(beta1)
+abline(v=2, col='red', lwd=3,)
+```
