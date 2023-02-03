@@ -1,6 +1,8 @@
 ---
 title: "Show B0 and B1 are unbiased"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
